@@ -2,16 +2,27 @@ body {
     margin: 0;
     padding: 20px;
     font-family: sans-serif;
+    background: #fff;
+}
+  
+.container {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
 }
   
 svg {
-    /* background: #f9f9f9; */
-    background: #fce6e6;
-    display: block;
+    background: #f9f9f9;
     border: 1px solid #ccc;
 }
   
-button {
-    margin-bottom: 10px;
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+  
+select, label {
+    font-size: 14px;
 }
   

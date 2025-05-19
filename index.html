@@ -2,13 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Age Grid Visualization</title>
+  <title>Grid Visualization</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<button onclick="sortByAge()">Sort by Age</button>
-<svg width="1024" height="544"></svg>
+<div class="container">
+  <svg id="grid"></svg>
+
+  <div class="controls">
+    <label for="orderSelect">Order By:</label>
+    <select id="orderSelect">
+      <option value="none">Original</option>
+      <option value="dateEx">Date</option>
+      <option value="age">Age (Decades)</option>
+      <option value="sex">Sex</option>
+      <option value="race">Race</option>
+    </select>
+
+    <label for="colorSelect">Color By:</label>
+    <select id="colorSelect">
+      <option value="dateEx">Date</option>
+      <option value="age">Age (Decades)</option>
+      <option value="sex">Sex</option>
+      <option value="race">Race</option>
+    </select>
+  </div>
+</div>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -16,4 +36,3 @@
 
 </body>
 </html>
-
