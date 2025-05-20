@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:100&display=swap');
+
 body {
     margin: 0;
     padding: 20px;
@@ -12,8 +14,8 @@ body {
 }
   
 svg {
-    background: #f9f9f9;
-    border: 1px solid #ccc;
+    /* background: #f9f9f9; */
+    /* border: 1px solid #ccc; */
 }
   
 .controls {
@@ -25,4 +27,17 @@ svg {
 select, label {
     font-size: 14px;
 }
+
+
+.group-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 100;
+  font-size: 20px;
+  fill: black;
+
+
+  /* dominant-baseline: middle; */
+}
+
+
   
