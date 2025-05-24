@@ -9,25 +9,51 @@
 <body>
 
 <div class="container">
-  <svg id="grid"></svg>
-
-  <div class="controls">
-    <label for="orderSelect">Order By:</label>
-    <select id="orderSelect">
-      <option value="none">Original</option>
-      <option value="dateEx">Date</option>
-      <option value="age">Age (Decades)</option>
-      <option value="sex">Sex</option>
-      <option value="race">Race</option>
-    </select>
-
-    <label for="colorSelect">Color By:</label>
-    <select id="colorSelect">
-      <option value="dateEx">Date</option>
-      <option value="age">Age (Decades)</option>
-      <option value="sex">Sex</option>
-      <option value="race">Race</option>
-    </select>
+  <div class="grid-container">
+    <div class="grid-title" id="grid-title-id"></div>
+    <svg id="grid"></svg>
+  </div>
+  <div class="control-container">
+    <div class="controls">
+      <div class="dropdown" id="dropdown-order">
+        <div class="drop-label">Sort By</div>
+        <div class="dropdown-button" id="dropdownButton-order">
+            <div>None</div>
+            <img src="./assets/icons/Icon_arrowDown.svg" class = "icon">
+        </div>
+        <div class="dropdown-content" id="dropdownContent-order">
+          <!-- <div value="none">None</div> -->
+          <div value="dateEx">Date</div>
+          <div value="age">Age</div>
+          <div value="sex">Sex</div>
+          <div value="race">Race</div>
+          <div value="stmt_len">Statement Length</div>
+          <div class="divid-line"></div>  
+          <div value="innocent">Innocence Claim</div>
+        </div>
+      </div>
+      <div class="dropdown" id="dropdown-color">
+        <div class="drop-label">Color By</div>
+        <div class="dropdown-button" id="dropdownButton-color">
+            <div>None</div>
+            <img src="./assets/icons/Icon_arrowDown.svg" class = "icon">
+        </div>
+        <div class="dropdown-content" id="dropdownContent-color">
+          <!-- <div value="none">None</div> -->
+          <div value="dateEx">Date</div>
+          <div value="age">Age</div>
+          <div value="sex">Sex</div>
+          <div value="race">Race</div>
+          <div value="stmt_len">Statement Length</div>
+          <div class="divid-line"></div>  
+          <div value="innocent">Innocence Claim</div>
+        </div>
+      </div>
+    </div>
+    <div class="legend-container">
+      <div class="legend-title" id="legend-title-id"></div>
+      <div class="legend" id="color-by-legend"></div>
+    </div>
   </div>
 </div>
 

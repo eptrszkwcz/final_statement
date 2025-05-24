@@ -5,12 +5,32 @@ body {
     padding: 20px;
     font-family: sans-serif;
     background: #fff;
+    font-family: 'Inter', sans-serif;
 }
   
 .container {
     display: flex;
-    align-items: flex-start;
-    gap: 20px;
+    justify-content: center;
+    /* align-items: center; */
+    gap: 36px;
+    height: 700px;
+}
+
+.grid-title{
+    height: 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 100;
+    font-size: 15px;
+    fill: black;
+    opacity: 0.5;
+    padding-left: 140px;
+    margin-bottom: 12px;
+}
+
+.control-container{
+    width: 380px;
+    padding-top: 32px;
+    /* flex: 1; */
 }
   
 svg {
@@ -39,5 +59,113 @@ select, label {
   /* dominant-baseline: middle; */
 }
 
+.control-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+}
 
+.controls{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.dropdown{
+    flex: 0.5;
+    display: flex;
+    flex-direction: column;
+}
+
+.drop-label{
+    font-family: 'Inter', sans-serif;
+    font-weight: 100;
+    font-size: 14px;
+    fill: black;
+    opacity: 0.5;
+}
   
+.dropdown-button{
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #EFEFEF;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.dropdown-button:hover{
+    background-color: #E0E0E0;
+    cursor: pointer;
+}
+
+.dropdown-content{
+    display: none;
+    background-color: #F8F8F8;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.divid-line{
+    height: 1px !important;
+    background-color: #E0E0E0;
+    /* margin-top: 8px;
+    margin-bottom: 8px; */
+    margin: 8px 16px;
+}
+
+.dropdown.open .dropdown-content {
+    display: block;
+}
+
+.dropdown-content div{
+    padding-left: 16px;
+    padding-right: 16px;
+    height: 32px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    color: rgba(0, 0, 0, 0.24);
+}
+
+.dropdown-content div:hover{
+    background-color: #EFEFEF;
+    cursor: pointer;
+    color: black;
+}
+
+.icon{
+    width: 14px;
+    height: 14px;
+}
+
+.icon.rotated {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+  }
+
+.legend-container{
+    height: 170px;
+    width: 160px;
+    /* background-color: #F8F8F8; */
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 100px;
+    /* margin-left: 20px; */
+}
+
+.legend-title{
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #5e5e5e;
+    /* padding-left: 16px; */
+    padding-bottom: 8px;
+}
