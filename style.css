@@ -5,32 +5,12 @@ body {
     padding: 20px;
     font-family: sans-serif;
     background: #fff;
-    font-family: 'Inter', sans-serif;
 }
   
 .container {
     display: flex;
-    justify-content: center;
-    /* align-items: center; */
-    gap: 36px;
-    height: 700px;
-}
-
-.grid-title{
-    height: 20px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 100;
-    font-size: 15px;
-    fill: black;
-    opacity: 0.5;
-    padding-left: 140px;
-    margin-bottom: 12px;
-}
-
-.control-container{
-    width: 380px;
-    padding-top: 32px;
-    /* flex: 1; */
+    align-items: flex-start;
+    gap: 20px;
 }
   
 svg {
@@ -59,12 +39,8 @@ select, label {
   /* dominant-baseline: middle; */
 }
 
-.control-container{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; 
-}
 
+<<<<<<< HEAD
 .controls{
     display: flex;
     flex-direction: row;
@@ -173,3 +149,6 @@ select, label {
 /* svg rect:hover {
     cursor: pointer;
 } */
+=======
+  
+>>>>>>> parent of fde00ea (aesthetic fixes and such)
