@@ -73,7 +73,10 @@ d3.csv("/data/data_1019_update.csv", d3.autoType).then(raw => {
       dateBin: binDate(parsedDate),
       stmt_len: d.stmt_len,
       stmtBin: binStmtLen(d.stmt_len),
-      innocent: d.innocent
+      innocent: d.innocent,
+      name_first: d.name_first,
+      name_last: d.name_last,
+      inmate_No: d.inmate_No
     };
   });
   currentData = [...originalData];
@@ -212,6 +215,42 @@ function drawGrid(data) {
     .attr("x", d => d.x)
     .attr("y", d => d.y)
     .attr("fill", d => getColor(d));
+
+  // const rects = svg.selectAll("rect").data(positionedData, d => d.id);
+
+  // rects.enter()
+  //   .append("rect")
+  //   .attr("width", size)
+  //   .attr("height", size)
+  //   .attr("x", d => d.x)
+  //   .attr("y", d => d.y)
+  //   .attr("fill", d => getColor(d))
+  //   .attr("stroke", "none")
+  //   .on("mouseover", function (event, d) {
+  //     d3.select(this)
+  //       .attr("stroke", "red")
+  //       .attr("stroke-width", 2);
+
+  //     d3.select("#tooltip")
+  //       .style("display", "block")
+  //       .html(`
+  //         <strong>${d.name_first} ${d.name_last}</strong><br>
+  //         Inmate No: ${d.inmate_No}<br>
+  //         Age: ${d.age}
+  //       `);
+  //   })
+  //   .on("mousemove", function (event) {
+  //     d3.select("#tooltip")
+  //       .style("left", (event.pageX + 12) + "px")
+  //       .style("top", (event.pageY + 12) + "px");
+  //   })
+  //   .on("mouseout", function () {
+  //     d3.select(this)
+  //       .attr("stroke", "none");
+
+  //     d3.select("#tooltip").style("display", "none");
+  //   });
+
 
   rects.merge(rects).each(function (d) {
     gsap.to(this, {
