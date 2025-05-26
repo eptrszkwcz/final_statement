@@ -73,7 +73,11 @@ d3.csv("/data/data_1019_update.csv", d3.autoType).then(raw => {
       dateBin: binDate(parsedDate),
       stmt_len: d.stmt_len,
       stmtBin: binStmtLen(d.stmt_len),
-      innocent: d.innocent
+      innocent: d.innocent,
+      name_first: d.name_first,
+      name_last: d.name_last,
+      inmate_No: d.inmate_No,
+      statement: d.Statement
     };
   });
   currentData = [...originalData];
@@ -206,12 +210,17 @@ function drawGrid(data) {
   const rects = svg.selectAll("rect").data(positionedData, d => d.id);
 
   rects.enter()
-    .append("rect")
-    .attr("width", size)
-    .attr("height", size)
-    .attr("x", d => d.x)
-    .attr("y", d => d.y)
-    .attr("fill", d => getColor(d));
+  .append("rect")
+  .attr("width", size)
+  .attr("height", size)
+  .attr("x", d => d.x)
+  .attr("y", d => d.y)
+  .attr("fill", d => getColor(d))
+  .attr("stroke", "none")
+  .on("click", handleClick)
+  .on("mouseover", handleMouseOver)
+  .on("mousemove", handleMouseMove)
+  .on("mouseout", handleMouseOut);
 
   rects.merge(rects).each(function (d) {
     gsap.to(this, {
@@ -355,5 +364,52 @@ function drawLegend(colorKey) {
     .style("fill", "#5e5e5e")
     .style("alignment-baseline", "middle");
 }
+
+// This handles the statement popup 
+function handleClick(event, d) {
+  const popup = document.querySelector(".statement-pop");
+  const content = popup.querySelector(".statement-content");
+  content.innerHTML = `
+    <strong>${d.name_first} ${d.name_last}</strong><br>
+    Inmate No: ${d.inmate_No}<br><br>
+    ${d.statement || "<em>No statement available.</em>"}
+  `;
+  popup.style.display = "block";
+}
+
+// Close button behavior
+document.querySelector(".statement-pop .close-button").addEventListener("click", () => {
+  document.querySelector(".statement-pop").style.display = "none";
+});
+
+// Hover functionality 
+function handleMouseOver(event, d) {
+  d3.select(event.currentTarget)
+    .attr("stroke", "#F97C7C")
+    .attr("stroke-width", 2);
+
+  d3.select("#tooltip")
+    .style("display", "block")
+    .html(`
+      <strong>${d.name_first} ${d.name_last}</strong><br>
+      Inmate No: ${d.inmate_No}<br>
+      Age: ${d.age}
+    `);
+}
+
+function handleMouseMove(event) {
+  d3.select("#tooltip")
+    .style("left", (event.pageX + 12) + "px")
+    .style("top", (event.pageY + 12) + "px");
+}
+
+function handleMouseOut(event) {
+  d3.select(event.currentTarget)
+    .attr("stroke", "none");
+
+  d3.select("#tooltip")
+    .style("display", "none");
+}
+
 
 
