@@ -7,7 +7,7 @@
 
 </head>
 <body>
-
+<div class="header"></div>
 <div class="container">
   <div class="grid-container">
     <div class="grid-title" id="grid-title-id"></div>
@@ -57,8 +57,14 @@
   </div>
   <div class="hover-tooltip" id="tooltip"></div>
   <div class="statement-pop" style="display: none;">
-    <button class="close-button">X</button>
-    <div class="statement-content"></div>
+    <div class="statement-header">
+      <div class="tooltip-title" id="statement-name-id"></div>
+      <div class="inmate-no" id="statement-no-id" style="margin-left: 8px;"></div>
+      <div class="spacer"></div>
+      <button class="pop-close-button" id="pop-close-button-id"><img src="./assets/icons/Icon_x.svg" class = "icon"></button>
+    </div>
+    <div class="statement-content">
+    </div>
   </div>
 </div>
 
@@ -68,3 +74,6 @@
 
 </body>
 </html>
+
+
+

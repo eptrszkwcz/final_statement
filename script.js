@@ -77,7 +77,8 @@ d3.csv("/data/data_1019_update.csv", d3.autoType).then(raw => {
       name_first: d.name_first,
       name_last: d.name_last,
       inmate_No: d.inmate_No,
-      statement: d.Statement
+      statement: d.Statement,
+      county: d.Country
     };
   });
   currentData = [...originalData];
@@ -208,6 +209,7 @@ function drawGrid(data) {
 
   // --- Grid Rects ---
   const rects = svg.selectAll("rect").data(positionedData, d => d.id);
+
 
   rects.enter()
   .append("rect")
@@ -367,33 +369,61 @@ function drawLegend(colorKey) {
 
 // This handles the statement popup 
 function handleClick(event, d) {
+  const svg_size = document.getElementById("grid");
   const popup = document.querySelector(".statement-pop");
-  const content = popup.querySelector(".statement-content");
-  content.innerHTML = `
-    <strong>${d.name_first} ${d.name_last}</strong><br>
-    Inmate No: ${d.inmate_No}<br><br>
-    ${d.statement || "<em>No statement available.</em>"}
-  `;
-  popup.style.display = "block";
+  const pop_name = document.querySelector("#statement-name-id");
+  const pop_no = document.querySelector("#statement-no-id");
+  const pop_content = popup.querySelector(".statement-content");
+  positionPopup(popup, svg_size);
+  pop_name.textContent = `${d.name_first} ${d.name_last}`;  
+  pop_no.textContent = d.inmate_No;
+  pop_content.textContent = d.statement || "<em>No statement available.</em>";
+  popup.style.display = "flex";
+}
+
+// position the popup dynamically 
+function positionPopup(popup, svg) {
+  const rect = svg.getBoundingClientRect();
+
+  var computed_width = rect.width - leftMargin - rightMargin;
+  var computed_height = rect.height - botMargin;
+
+  popup.style.position = 'absolute';
+  popup.style.left = `${rect.left + window.scrollX}px`;
+  popup.style.top = `${rect.top + window.scrollY}px`;
+  popup.style.width = `${computed_width}px`;
+  popup.style.height = `${computed_height}px`;
 }
 
 // Close button behavior
-document.querySelector(".statement-pop .close-button").addEventListener("click", () => {
+document.getElementById("pop-close-button-id").addEventListener("click", () => {
+  console.log("MAMIII")
   document.querySelector(".statement-pop").style.display = "none";
 });
 
 // Hover functionality 
 function handleMouseOver(event, d) {
   d3.select(event.currentTarget)
-    .attr("stroke", "#F97C7C")
+    .attr("stroke", "#5e5e5e")
     .attr("stroke-width", 2);
 
   d3.select("#tooltip")
     .style("display", "block")
     .html(`
-      <strong>${d.name_first} ${d.name_last}</strong><br>
-      Inmate No: ${d.inmate_No}<br>
-      Age: ${d.age}
+    <div class="tooltip-header">
+      <div class="tooltip-title">${d.name_first} ${d.name_last}</div>
+      <div class="inmate-no">${d.inmate_No}</div>
+    </div>
+    <div class="divid-line" style="margin: 8px 0px;"></div> 
+    <div class="tooltip-entry">
+      Date of Execution <span class="entry-bold">${d.dateEx}</span>
+    </div>
+    <div class="tooltip-entry">
+      Age at Execution <span class="entry-bold">${d.age}</span>
+    </div>
+    <div class="tooltip-entry" style="margin-bottom:0px">
+      County <span class="entry-bold">${d.county}</span>
+    </div>
     `);
 }
 
@@ -410,6 +440,5 @@ function handleMouseOut(event) {
   d3.select("#tooltip")
     .style("display", "none");
 }
-
 
 
