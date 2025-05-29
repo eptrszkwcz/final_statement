@@ -1,5 +1,4 @@
 // Refactored script.js with centralized groupConfig
-
 const numCols = 25;
 const size = 20;
 const padding = 3;
@@ -374,11 +373,20 @@ function handleClick(event, d) {
   const pop_name = document.querySelector("#statement-name-id");
   const pop_no = document.querySelector("#statement-no-id");
   const pop_content = popup.querySelector(".statement-content");
+  const blanket = document.querySelector(".statement-pop-blanket");
   positionPopup(popup, svg_size);
   pop_name.textContent = `${d.name_first} ${d.name_last}`;  
   pop_no.textContent = d.inmate_No;
   pop_content.textContent = d.statement || "<em>No statement available.</em>";
   popup.style.display = "flex";
+  blanket.style.display = "block";
+
+  if (d.statement.length < 125){
+    pop_content.style.alignItems = "center";
+  } else {
+    pop_content.style.alignItems = "left";
+  }
+
 }
 
 // position the popup dynamically 
@@ -397,8 +405,8 @@ function positionPopup(popup, svg) {
 
 // Close button behavior
 document.getElementById("pop-close-button-id").addEventListener("click", () => {
-  console.log("MAMIII")
   document.querySelector(".statement-pop").style.display = "none";
+  document.querySelector(".statement-pop-blanket").style.display = "none";
 });
 
 // Hover functionality 
