@@ -31,8 +31,16 @@ d3.csv("/data/data_1019_update.csv", d3.autoType).then(raw => {
     };
   });
   currentData = [...originalData];
+  preloadImages(currentData)
   drawGrid(currentData);
 });
+
+function preloadImages(data) {
+  data.forEach(d => {
+    const img = new Image();
+    img.src = `/assets/images/square-small/${d.No}-sm.jpg`;
+  });
+}
 
 // Dropdown behavior
 document.querySelectorAll(".dropdown-button").forEach(button => {
