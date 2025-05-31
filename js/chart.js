@@ -2,6 +2,7 @@ import { groupConfig } from "./config.js";
 import { currentColorBy, currentOrderBy } from "./main.js";
 
 const svg = d3.select("#grid");
+svg.append("g").attr("id", "hover-overlay");
 const numCols = 25;
 const size = 20;
 const padding = 3;
@@ -10,59 +11,95 @@ const leftMargin = 140;
 const rightMargin = size + (2*padding);
 const botMargin = size + (2*padding);
 
-
 export function drawGrid(data) {
-    let positionedData, labelData, countLabelData;
-  
-    if (groupConfig[currentOrderBy]) {
-      const result = computeGroupedPositions(data, currentOrderBy);
-      positionedData = result.positioned;
-      labelData = result.labels;
-      countLabelData = result.countLabels;
-    } else {
-      positionedData = data.map((d, i) => ({
-        ...d,
-        x: (i % numCols) * (size + padding) + leftMargin,
-        y: Math.floor(i / numCols) * (size + padding)
-      }));
-      labelData = [];
-      countLabelData = [];
-    }
-  
-    const svgWidth = d3.max(positionedData, d => d.x) + size + rightMargin;
-    const svgHeight = d3.max(positionedData, d => d.y) + size + botMargin;
-    svg.attr("width", svgWidth).attr("height", svgHeight);
-  
-    // --- Grid Rects ---
-    const rects = svg.selectAll("rect").data(positionedData, d => d.id);
-  
-    const handleClick = handleClickFactory({ leftMargin, rightMargin, botMargin });
-    const getColor = GetColorFactory(currentColorBy);
-  
-    rects.enter()
-    .append("rect")
-    .attr("width", size)
-    .attr("height", size)
-    .attr("x", d => d.x)
-    .attr("y", d => d.y)
-    .attr("fill", d => getColor(d))
-    .attr("stroke", "none")
-    .on("click", handleClick)
-    .on("mouseover", handleMouseOver)
-    .on("mousemove", handleMouseMove)
-    .on("mouseout", handleMouseOut);
-  
-    rects.merge(rects).each(function (d) {
-      gsap.to(this, {
-        attr: {
-          x: d.x,
-          y: d.y,
-          fill: getColor(d)
-        },
-        duration: 0.6,
-        ease: "none"
+  let positionedData, labelData, countLabelData;
+
+  if (groupConfig[currentOrderBy]) {
+    const result = computeGroupedPositions(data, currentOrderBy);
+    positionedData = result.positioned;
+    labelData = result.labels;
+    countLabelData = result.countLabels;
+  } else {
+    positionedData = data.map((d, i) => ({
+      ...d,
+      x: (i % numCols) * (size + padding) + leftMargin,
+      y: Math.floor(i / numCols) * (size + padding)
+    }));
+    labelData = [];
+    countLabelData = [];
+  }
+
+  const svgWidth = d3.max(positionedData, d => d.x) + size + rightMargin;
+  const svgHeight = d3.max(positionedData, d => d.y) + size + botMargin;
+  svg.attr("width", svgWidth).attr("height", svgHeight);
+
+  const handleClick = handleClickFactory({ leftMargin, rightMargin, botMargin });
+  const getColor = GetColorFactory(currentColorBy);
+
+  const images = svg.selectAll("image").data(positionedData, d => d.id);
+  const rects = svg.selectAll("rect").data(positionedData, d => d.id);
+
+
+  if (currentColorBy === "photo") {
+    svg.selectAll("rect").remove();
+    
+    const imgSelection = images.enter()
+      .append("image")
+      .attr("x", d => d.x)
+      .attr("y", d => d.y)
+      .attr("width", size)
+      .attr("height", size)
+      .attr("href", d => `/assets/images/square-small/${d.No}-sm.jpg`)
+      .attr("preserveAspectRatio", "xMidYMid slice")
+      .on("click", handleClick)
+      .on("mouseover", handleMouseOver)
+      .on("mousemove", handleMouseMove)
+      .on("mouseout", handleMouseOut)
+      .merge(images);
+
+      imgSelection.each(function (d) {
+        gsap.to(this, {
+          attr: {
+            x: d.x,
+            y: d.y,
+          },
+          duration: 0.6,
+          ease: "none"
+        });
       });
-    });
+
+  } else {
+    if (svg.select("#hover-overlay").empty()) {
+      svg.append("g").attr("id", "hover-overlay");
+    }
+    svg.selectAll("image").remove();
+    
+      rects.enter()
+      .append("rect")
+      .attr("width", size)
+      .attr("height", size)
+      .attr("x", d => d.x)
+      .attr("y", d => d.y)
+      .attr("fill", d => getColor(d))
+      .attr("stroke", "none")
+      .on("click", handleClick)
+      .on("mouseover", handleMouseOver_img)
+      .on("mousemove", handleMouseMove)
+      .on("mouseout", handleMouseOut_img)
+      .merge(rects);
+
+      rects.each(function (d) {
+        gsap.to(this, {
+          attr: {
+            x: d.x,
+            y: d.y,
+            fill: getColor(d)
+          },
+          duration: 0.6,
+          ease: "none"
+        });
+      });
+  }
   
     svg.selectAll(".group-label").remove();
     svg.selectAll(".group-label")
@@ -246,6 +283,48 @@ function handleMouseOver(event, d) {
       `);
 }
 
+function handleMouseOver_img(event, d) {
+  // Remove any existing hover image
+  svg.select("#hover-overlay").selectAll("image").remove();
+
+  // Append new image into the overlay group (so it renders on top)
+  svg.select("#hover-overlay")
+    .append("image")
+    .attr("class", "hover-image")
+    .attr("x", d.x)
+    .attr("y", d.y)
+    .attr("width", size)
+    .attr("height", size)
+    .attr("href", `/assets/images/square-small/${d.No}-sm.jpg`)
+    .attr("preserveAspectRatio", "xMidYMid slice");
+
+  // Optional: stroke for hover effect
+  d3.select(event.currentTarget)
+    .attr("opacity", 0)
+    .attr("stroke", "#5e5e5e")
+    .attr("stroke-width", 2);
+
+  d3.select("#tooltip")
+    .style("display", "block")
+    .html(`
+      <div class="tooltip-header">
+        <div class="tooltip-title">${d.name_first} ${d.name_last}</div>
+        <div class="inmate-no">${d.inmate_No}</div>
+      </div>
+      <div class="divid-line" style="margin: 8px 0px;"></div> 
+      <div class="tooltip-entry">
+        Date of Execution <span class="entry-bold">${d.dateEx}</span>
+      </div>
+      <div class="tooltip-entry">
+        Age at Execution <span class="entry-bold">${d.age}</span>
+      </div>
+      <div class="tooltip-entry" style="margin-bottom:0px">
+        County <span class="entry-bold">${d.county}</span>
+      </div>
+    `);
+}
+
+
 function handleMouseMove(event) {
     d3.select("#tooltip")
       .style("left", (event.pageX + 12) + "px")
@@ -259,6 +338,18 @@ function handleMouseOut(event) {
     d3.select("#tooltip")
         .style("display", "none");
 }
+
+function handleMouseOut_img(event, d) {
+  d3.select(event.currentTarget)
+    .attr("opacity", 1)
+    .attr("stroke", "none");
+
+  d3.select("#tooltip").style("display", "none");
+
+  svg.selectAll(".hover-image").remove();
+}
+
+
 
 
 function handleClickFactory({leftMargin, rightMargin, botMargin}) {

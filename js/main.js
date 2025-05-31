@@ -13,6 +13,7 @@ d3.csv("/data/data_1019_update.csv", d3.autoType).then(raw => {
     const parsedDate = new Date(d.dateEx);
     return {
       id: i,
+      No: d.No,
       age: d.age,
       ageBin: binAge(d.age),
       sex: d.sex,

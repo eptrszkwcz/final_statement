@@ -29,7 +29,7 @@ export const groupConfig = {
     },
     stmt_len: {
       order: [0,1,2,3,4],
-      labelMap: {0: "No Statement", 1: "under 1 min", 2: "1-5 min", 3: "5-10 min", 4: "over 10 min"},
+      labelMap: {0: "No Statement", 1: "0-\u00BD min", 2: "\u00BD-1 min", 3: "1-5 min", 4: "Over 5 min"},
       colorScale: d3.scaleOrdinal().domain([0,1,2,3,4]).range(["#D4FCF7", "#96F8EC", "#81DED3", "#52D0C1", "#22C2B0"]),
       title: "Statement Duration",
       accessor: d => d.stmtBin
