@@ -7,12 +7,16 @@ export function binAge(age) {
     return 999;
 }
   
-export function binStmtLen(stmt_len) {
-    if (stmt_len == 0) return 0;
-    if (stmt_len > 0 && stmt_len < 130) return 1;
-    if (stmt_len >= 130 && stmt_len < 650) return 2;
-    if (stmt_len >= 650 && stmt_len < 1300) return 3;
-    if (stmt_len > 1300) return 4;
+export function binStmtLen(stmt_len, statement) {
+    var word_lngth = getWordCount(statement)
+    if (stmt_len == 0) {return 0} 
+    else {
+        if (word_lngth > 0 && word_lngth < 65) return 1;
+        if (word_lngth >= 65 && word_lngth < 130) return 2;
+        if (word_lngth >= 130 && word_lngth < 650) return 3;
+        if (word_lngth >= 650 && word_lngth < 1300) return 4;
+    };
+    
 }
   
 export function binDate(date) {
@@ -24,4 +28,11 @@ export function binDate(date) {
     if (year >= 2010 && year < 2020) return 3;
     return 999;
 }
+
+function getWordCount(statement) {
+    // if (typeof statement !== "string") return 0;
+    const words = statement.trim().split(/\s+/);
+    const word_len = words.filter(word => word.length > 0).length; // Filter out any empty strings and return the length
+    return word_len
+  }
 

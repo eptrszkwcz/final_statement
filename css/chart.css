@@ -31,9 +31,6 @@ select, label {
   font-weight: 100;
   font-size: 20px;
   fill: black;
-
-
-  /* dominant-baseline: middle; */
 }
 
 .control-container{
