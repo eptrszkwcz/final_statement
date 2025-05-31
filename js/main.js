@@ -20,7 +20,7 @@ d3.csv("/data/data_1019_update.csv", d3.autoType).then(raw => {
       dateEx: d.dateEx,
       dateBin: binDate(parsedDate),
       stmt_len: d.stmt_len,
-      stmtBin: binStmtLen(d.stmt_len),
+      stmtBin: binStmtLen(d.stmt_len, d.Statement),
       innocent: d.innocent,
       name_first: d.name_first,
       name_last: d.name_last,

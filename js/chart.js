@@ -276,11 +276,8 @@ function handleClickFactory({leftMargin, rightMargin, botMargin}) {
         popup.style.display = "flex";
         blanket.style.display = "block";
       
-        if (d.statement.length < 125){
-          pop_content.style.alignItems = "center";
-        } else {
-          pop_content.style.alignItems = "left";
-        }
+        pop_content.style.alignItems = d.statement.length < 125 ? "center" : "left";
+        pop_content.style.justifyContent = d.statement.length > 3000 ? "start" : "center";    
     };
 }
 
