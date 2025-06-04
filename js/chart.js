@@ -200,7 +200,7 @@ function computeGroupedPositions(data, groupKey) {
     let countLabels = [];
     let yOffset = 0;
   
-    config.order.forEach(groupValue => {
+    config.order.forEach((groupValue,i) => {
       let groupItems = groups.get(groupValue) || [];
   
       // 🟡 Sort within group by currentColorBy
@@ -226,15 +226,37 @@ function computeGroupedPositions(data, groupKey) {
       let fillColor = "#5e5e5e";
       let fontWeight = "700";
   
+      // if (currentColorBy === "innocent") {
+      //   const total = groupItems.length;
+      //   const explicitCount = groupItems.filter(d => d.innocent === 2).length;
+      //   const percent = total > 0 ? Math.round((explicitCount / total) * 100) : 0;
+      //   fillColor = "#F97C7C";
+      //   fontWeight = "900";
+      //   if (currentOrderBy === "innocent") {
+      //     labelText = groupItems.length;
+      //   } else {
+      //     labelText = `${percent}%`;
+      //   }
+      // } else {
+      //   labelText = groupItems.length;
+      // }
+
       if (currentColorBy === "innocent") {
         const total = groupItems.length;
         const explicitCount = groupItems.filter(d => d.innocent === 2).length;
         const percent = total > 0 ? Math.round((explicitCount / total) * 100) : 0;
-        labelText = `${percent}%`;
         fillColor = "#F97C7C";
-        fontWeight = "900";
+        fontWeight = "900";     
+        if (currentOrderBy === "innocent") {
+          labelText = groupItems.length;
+          const isLastGroup = i === 2;
+          fillColor = isLastGroup ? "#F97C7C" : "#b3b3b3"; 
+        } else {
+          labelText = `${percent}%`;
+        }
       } else {
         labelText = groupItems.length;
+        fillColor = "#5e5e5e";
       }
   
       const countX = (groupItems.length % numCols) * (size + padding) + leftMargin + size / 2;
