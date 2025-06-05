@@ -5,6 +5,7 @@
   <title>Texas Last Words</title>
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/chart.css" />
+  <link rel="stylesheet" href="./css/scroll.css" />
 
 </head>
 <body>
@@ -63,13 +64,52 @@
     <div class="statement-header">
       <div class="tooltip-title" id="statement-name-id"></div>
       <div class="inmate-no" id="statement-no-id" style="margin-left: 8px;"></div>
-      <div class="spacer"></div>
+      <div class="state-spacer"></div>
       <button class="pop-close-button" id="pop-close-button-id"><img src="./assets/icons/Icon_x.svg" class = "icon"></button>
     </div>
     <div class="statement-content">
     </div>
   </div>
   <div class="statement-pop-blanket" style="display: none;"></div>
+</div>
+
+<div class="scroll-container">
+  <div class="scroll-step top" data-step="photo">544 people have been executed by the State of Texas since 1982.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step" data-step="grid_plane">On average, 1 person is executed every three weeks.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step img" >
+    <div>
+      All executions are carried out by lethal injection in a small, mint-green colored room in the town of Huntsville.
+    </div>
+    <img class="scroll-img" src="./assets/images/chamber.png" alt="Chamber Image">
+  </div>
+  <div class="spacer"></div>
+  <div class="scroll-step" data-step="statement">Just before their execution, inmates are allowed by law to say any last words. These statements are recorded and included in the public domain.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step inn" data-step="inn">49 inmates have explicitly expressed their innocence in their last words. <br> <br>This figure does not necessarily capture all of those who are potentially innocent, just those who made claims as part of their last words.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step" data-step="date-ex">The pace of executions peaked in the 2000s at a rate of one execution every two weeks for the entire decade.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step inn" data-step="date-ex inn">The 2000s also had the highest percent of inmate who made implicit and explicit claims for their innocence.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step" data-step="age">Most inmates are executed in their 30s. The youngest executed during this time period was 25 years old, the oldest was 67.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step inn" data-step="age inn">On average, older inmates made more claims to innocence.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step" data-step="sex">The overwhelming majority of those executed were male, with only 6 of the 544 identifying as female.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step inn" data-step="sex inn">No female inmates made implicit or explicit claims of innocence.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step" data-step="stmt_len">Of the 80% of inmates who chose to make a final statement, most lasted under 1 minute. <br> <br>The longest statement was just over 12 minutes. </div>
+  <div class="spacer"></div>
+  <div class="scroll-step inn" data-step="stmt_len inn">As statement length increased, it was more likely an explicit claim for innocence was made.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step inn" data-step="inn">With the end of life minutes away and with no strategic use for doing so, 70 inmates used their last words to express their innocence.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step inn" data-step="inn photo">Are these men innocent? <br> <br>Organizations like the innocence project are committed to provided legal support to incarcerated individuals (on and off death row) to investigate their claims of innocence.</div>
+  <div class="spacer"></div>
+  <div class="scroll-step last" data-step="explore">Use the menus at right to explore the data for yourself.</div>
 </div>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>

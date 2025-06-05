@@ -11,7 +11,7 @@
 }
 
 .control-container{
-    width: 380px;
+    width: 400px;
     padding-top: 32px;
     /* flex: 1; */
 }
@@ -43,6 +43,7 @@ select, label {
     display: flex;
     flex-direction: row;
     gap: 20px;
+    z-index: 100;
 }
 
 .dropdown{
@@ -243,6 +244,6 @@ svg rect:hover {
     margin-left: 4px;
 }
 
-.spacer{
+.state-spacer{
     flex: 1;
 }

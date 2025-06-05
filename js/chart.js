@@ -51,6 +51,7 @@ export function drawGrid(data) {
       .attr("height", size)
       .attr("href", d => `/assets/images/square-small/${d.No}-sm.jpg`)
       .attr("preserveAspectRatio", "xMidYMid slice")
+      .attr("opacity", 0) // Start invisible
       .on("click", handleClick)
       .on("mouseover", handleMouseOver)
       .on("mousemove", handleMouseMove)
@@ -63,8 +64,10 @@ export function drawGrid(data) {
             x: d.x,
             y: d.y,
           },
-          duration: 0.6,
-          ease: "none"
+          opacity: 1, // Fade in
+          duration: 3,
+          ease: "power1.out",
+          // ease: "none"
         });
       });
 
@@ -74,31 +77,34 @@ export function drawGrid(data) {
     }
     svg.selectAll("image").remove();
     
-      rects.enter()
-      .append("rect")
-      .attr("width", size)
-      .attr("height", size)
-      .attr("x", d => d.x)
-      .attr("y", d => d.y)
-      .attr("fill", d => getColor(d))
-      .attr("stroke", "none")
-      .on("click", handleClick)
-      .on("mouseover", handleMouseOver_img)
-      .on("mousemove", handleMouseMove)
-      .on("mouseout", handleMouseOut_img)
-      .merge(rects);
+    rects.enter()
+    .append("rect")
+    .attr("width", size)
+    .attr("height", size)
+    .attr("x", d => d.x)
+    .attr("y", d => d.y)
+    .attr("fill", d => getColor(d))
+    .attr("stroke", "none")
+    // .attr("opacity", 0)
+    .on("click", handleClick)
+    .on("mouseover", handleMouseOver_img)
+    .on("mousemove", handleMouseMove)
+    .on("mouseout", handleMouseOut_img)
+    .merge(rects);
 
-      rects.each(function (d) {
-        gsap.to(this, {
-          attr: {
-            x: d.x,
-            y: d.y,
-            fill: getColor(d)
-          },
-          duration: 0.6,
-          ease: "none"
-        });
+    rects.each(function (d) {
+      gsap.to(this, {
+        attr: {
+          x: d.x,
+          y: d.y,
+          fill: getColor(d)
+        },
+        duration: 0.6,
+        ease: "power1.out",
+        // ease: "none"
       });
+    });
+
   }
   
     svg.selectAll(".group-label").remove();
@@ -137,12 +143,109 @@ export function drawGrid(data) {
 }
 
 
+export function drawGrid_sequence(data) {
+  let positionedData, labelData, countLabelData;
+
+  if (groupConfig[currentOrderBy]) {
+    const result = computeGroupedPositions(data, currentOrderBy);
+    positionedData = result.positioned;
+    labelData = result.labels;
+    countLabelData = result.countLabels;
+  } else {
+    positionedData = data.map((d, i) => ({
+      ...d,
+      x: (i % numCols) * (size + padding) + leftMargin,
+      y: Math.floor(i / numCols) * (size + padding)
+    }));
+    labelData = [];
+    countLabelData = [];
+  }
+
+  const svgWidth = d3.max(positionedData, d => d.x) + size + rightMargin;
+  const svgHeight = d3.max(positionedData, d => d.y) + size + botMargin;
+  svg.attr("width", svgWidth).attr("height", svgHeight);
+
+  const handleClick = handleClickFactory({ leftMargin, rightMargin, botMargin });
+  const getColor = GetColorFactory(currentColorBy);
+
+  const images = svg.selectAll("image").data(positionedData, d => d.id);
+  const rects = svg.selectAll("rect").data(positionedData, d => d.id);
+
+
+  if (currentColorBy === "photo") {
+    svg.selectAll("rect").remove();
+  
+    const imgSelection = images.enter()
+      .append("image")
+      .attr("x", d => d.x)
+      .attr("y", d => d.y)
+      .attr("width", size)
+      .attr("height", size)
+      .attr("href", d => `/assets/images/square-small/${d.No}-sm.jpg`)
+      .attr("preserveAspectRatio", "xMidYMid slice")
+      .attr("opacity", 0)
+      .on("click", handleClick)
+      .on("mouseover", handleMouseOver)
+      .on("mousemove", handleMouseMove)
+      .on("mouseout", handleMouseOut)
+      .merge(images);
+  
+    imgSelection.each(function (d, i) {
+      gsap.to(this, {
+        attr: {
+          x: d.x,
+          y: d.y,
+        },
+        opacity: 1,
+        duration: 0.4,
+        delay: i * 0.01, // staggered effect
+        ease: "power1.out"
+      });
+    });
+  
+  } else {
+    if (svg.select("#hover-overlay").empty()) {
+      svg.append("g").attr("id", "hover-overlay");
+    }
+  
+    const rectSelection = rects.enter()
+      .append("rect")
+      .attr("width", size)
+      .attr("height", size)
+      .attr("x", d => d.x)
+      .attr("y", d => d.y)
+      .attr("fill", d => getColor(d))
+      .attr("stroke", "none")
+      .attr("opacity", 0)
+      .on("click", handleClick)
+      .on("mouseover", handleMouseOver_img)
+      .on("mousemove", handleMouseMove)
+      .on("mouseout", handleMouseOut_img)
+      .merge(rects);
+  
+    rectSelection.each(function (d, i) {
+      gsap.to(this, {
+        attr: {
+          x: d.x,
+          y: d.y,
+          fill: getColor(d)
+        },
+        opacity: 1,
+        duration: 0.4,
+        delay: i * 0.015, // staggered effect
+        ease: "power1.out"
+      });
+    });
+  }
+  
+};
+
+
 export function drawLegend(colorKey) {
     const container = d3.select("#color-by-legend");
     container.selectAll("svg").remove(); // Clear previous legend
   
     if (!groupConfig[colorKey]) return;
-  
   
     const config = groupConfig[colorKey];
     // console.log(config.title)
@@ -191,7 +294,7 @@ export function updateGridTitle(orderBy) {
     document.getElementById("grid-title-id").textContent = groupConfig[orderBy]?.title || "";
 }
 
-function computeGroupedPositions(data, groupKey) {
+export function computeGroupedPositions(data, groupKey) {
     const config = groupConfig[groupKey];
     const groups = d3.group(data, config.accessor);
   
@@ -226,21 +329,6 @@ function computeGroupedPositions(data, groupKey) {
       let fillColor = "#5e5e5e";
       let fontWeight = "700";
   
-      // if (currentColorBy === "innocent") {
-      //   const total = groupItems.length;
-      //   const explicitCount = groupItems.filter(d => d.innocent === 2).length;
-      //   const percent = total > 0 ? Math.round((explicitCount / total) * 100) : 0;
-      //   fillColor = "#F97C7C";
-      //   fontWeight = "900";
-      //   if (currentOrderBy === "innocent") {
-      //     labelText = groupItems.length;
-      //   } else {
-      //     labelText = `${percent}%`;
-      //   }
-      // } else {
-      //   labelText = groupItems.length;
-      // }
-
       if (currentColorBy === "innocent") {
         const total = groupItems.length;
         const explicitCount = groupItems.filter(d => d.innocent === 2).length;
@@ -371,31 +459,73 @@ function handleMouseOut_img(event, d) {
   svg.selectAll(".hover-image").remove();
 }
 
+function handleClickFactory({ leftMargin, rightMargin, botMargin }) {
+  return function handleClick(event, d) {
+    const svg_size = document.getElementById("grid");
+    const popup = document.querySelector(".statement-pop");
+    const pop_name = document.querySelector("#statement-name-id");
+    const pop_no = document.querySelector("#statement-no-id");
+    const pop_content = popup.querySelector(".statement-content");
+    const blanket = document.querySelector(".statement-pop-blanket");
 
+    // Set content
+    positionPopup(popup, svg_size, leftMargin, rightMargin, botMargin);
+    pop_name.textContent = `${d.name_first} ${d.name_last}`;
+    pop_no.textContent = d.inmate_No;
+    pop_content.textContent = d.statement || "<em>No statement available.</em>";
 
+    // Prepare for fade-in
+    popup.style.opacity = 0;
+    popup.style.display = "flex";
+    blanket.style.display = "block";
 
-function handleClickFactory({leftMargin, rightMargin, botMargin}) {
-    return function handleClick(event, d) {
-        const svg_size = document.getElementById("grid");
-        const popup = document.querySelector(".statement-pop");
-        const pop_name = document.querySelector("#statement-name-id");
-        const pop_no = document.querySelector("#statement-no-id");
-        const pop_content = popup.querySelector(".statement-content");
-        const blanket = document.querySelector(".statement-pop-blanket");
-        positionPopup(popup, svg_size, leftMargin, rightMargin, botMargin);
-        pop_name.textContent = `${d.name_first} ${d.name_last}`;  
-        pop_no.textContent = d.inmate_No;
-        pop_content.textContent = d.statement || "<em>No statement available.</em>";
-        popup.style.display = "flex";
-        blanket.style.display = "block";
-      
-        pop_content.style.alignItems = d.statement.length < 125 ? "center" : "left";
-        pop_content.style.justifyContent = d.statement.length > 3000 ? "start" : "center";    
-    };
+    // Adjust alignment
+    pop_content.style.alignItems = d.statement.length < 125 ? "center" : "left";
+    pop_content.style.justifyContent = d.statement.length > 3000 ? "start" : "center";
+
+    // Fade in popup using GSAP
+    gsap.to(popup, {
+      opacity: 1,
+      duration: 1,
+      ease: "power1.out"
+    });
+  };
 }
 
+export function manual_stmt_pop(d) {
+  const svg_size = document.getElementById("grid");
+  const popup = document.querySelector(".statement-pop");
+  const pop_name = document.querySelector("#statement-name-id");
+  const pop_no = document.querySelector("#statement-no-id");
+  const pop_content = popup.querySelector(".statement-content");
+  const blanket = document.querySelector(".statement-pop-blanket");
+
+  // Set content
+  positionPopup(popup, svg_size, leftMargin, rightMargin, botMargin);
+  pop_name.textContent = `${d.name_first} ${d.name_last}`;
+  pop_no.textContent = d.inmate_No;
+  pop_content.textContent = d.statement || "<em>No statement available.</em>";
+
+  // Prepare for fade-in
+  popup.style.opacity = 0;
+  popup.style.display = "flex";
+  blanket.style.display = "block";
+
+  // Adjust alignment
+  pop_content.style.alignItems = d.statement.length < 125 ? "center" : "left";
+  pop_content.style.justifyContent = d.statement.length > 3000 ? "start" : "center";
+
+  // Fade in popup using GSAP
+  gsap.to(popup, {
+    opacity: 1,
+    duration: 1,
+    ease: "power1.out"
+  });   
+};
+
+
 // position the popup dynamically 
-function positionPopup(popup, svg, leftMargin, rightMargin, botMargin) {
+export function positionPopup(popup, svg, leftMargin, rightMargin, botMargin) {
     const rect = svg.getBoundingClientRect();
   
     var computed_width = rect.width - leftMargin - rightMargin;

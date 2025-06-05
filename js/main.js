@@ -1,6 +1,6 @@
 // import { groupConfig } from "./config.js";
 import { binAge, binStmtLen, binDate } from './data.js';
-import { drawGrid, drawLegend, updateGridTitle} from './chart.js';
+import { drawGrid, drawGrid_sequence, manual_stmt_pop, drawLegend, updateGridTitle} from './chart.js';
 
 let originalData = [];
 let currentData = [];
@@ -89,5 +89,148 @@ document.getElementById("pop-close-button-id").addEventListener("click", () => {
   document.querySelector(".statement-pop-blanket").style.display = "none";
 });
 
+
+
+// SCROLL FUNCTIONALITY HERE 
+
+const steps = document.querySelectorAll(".scroll-step");
+
+const stepActions = {
+  "photo": () => {
+    document.querySelector(".controls").style.opacity = 0;
+    document.querySelector(".legend-container").style.opacity = 0;
+    document.querySelector(".grid-title").style.opacity = 0;
+    currentOrderBy = "none";
+    currentColorBy = "photo";
+    drawGrid(currentData)
+  },
+  "grid_plane": () => {
+    currentOrderBy = "none";
+    currentColorBy = "none";
+    drawGrid_sequence(currentData)
+    document.querySelector(".statement-pop").style.display = "none";
+    document.querySelector(".statement-pop-blanket").style.display = "none";
+  },
+  "statement": () => {
+    document.querySelector(".legend-container").style.opacity = 0;
+    document.querySelector(".grid-title").style.opacity = 0;
+    const man_pop = currentData.find(d => d.name_first === "Preston" && d.name_last === "Hughes");
+    manual_stmt_pop(man_pop);
+  },
+  "inn": () => {
+    document.querySelector(".statement-pop").style.display = "none";
+    document.querySelector(".statement-pop-blanket").style.display = "none";
+    document.querySelector(".legend-container").style.opacity = 1;
+    document.querySelector(".grid-title").style.opacity = 1;
+    currentOrderBy = "innocent";
+    currentColorBy = "innocent";
+    drawLegend(currentColorBy)
+    updateGridTitle(currentOrderBy)
+    drawGrid(currentData)
+  },
+  "date-ex": () => {
+    currentOrderBy = "dateEx";
+    currentColorBy = "dateEx";
+    drawLegend(currentColorBy)
+    updateGridTitle(currentOrderBy)
+    drawGrid(currentData)
+  },
+  "date-ex inn": () => {
+    currentOrderBy = "dateEx";
+    currentColorBy = "innocent";
+    drawLegend(currentColorBy)
+    updateGridTitle(currentOrderBy)
+    drawGrid(currentData)
+  },
+  "age": () => {
+    currentOrderBy = "age";
+    currentColorBy = "age";
+    drawLegend(currentColorBy)
+    updateGridTitle(currentOrderBy)
+    drawGrid(currentData)
+  },
+  "age inn": () => {
+    currentOrderBy = "age";
+    currentColorBy = "innocent";
+    drawLegend(currentColorBy)
+    updateGridTitle(currentOrderBy)
+    drawGrid(currentData)
+  },
+  "sex": () => {
+    currentOrderBy = "sex";
+    currentColorBy = "sex";
+    drawLegend(currentColorBy)
+    updateGridTitle(currentOrderBy)
+    drawGrid(currentData)
+  },
+  "sex inn": () => {
+    currentOrderBy = "sex";
+    currentColorBy = "innocent";
+    drawLegend(currentColorBy)
+    updateGridTitle(currentOrderBy)
+    drawGrid(currentData)
+  },
+  "stmt_len": () => {
+    currentOrderBy = "stmt_len";
+    currentColorBy = "stmt_len";
+    drawLegend(currentColorBy)
+    updateGridTitle(currentOrderBy)
+    drawGrid(currentData)
+  },
+  "stmt_len inn": () => {
+    document.querySelector(".legend-container").style.opacity = 1;
+    document.querySelector(".grid-title").style.opacity = 1;
+    currentOrderBy = "stmt_len";
+    currentColorBy = "innocent";
+    drawLegend(currentColorBy)
+    updateGridTitle(currentOrderBy)
+    drawGrid(currentData)
+  },
+  "inn photo": () => {
+    document.querySelector(".legend-container").style.opacity = 0;
+    document.querySelector(".grid-title").style.opacity = 0;
+    currentOrderBy = "innocent";
+    currentColorBy = "photo";
+    document.querySelector(".controls").style.opacity = 0;
+    drawLegend(currentColorBy)
+    updateGridTitle(currentOrderBy)
+    drawGrid(currentData)
+  },
+  "explore": () => {
+    document.querySelector(".legend-container").style.opacity = 1;
+    document.querySelector(".grid-title").style.opacity = 1;
+    currentOrderBy = "innocent";
+    currentColorBy = "innocent";
+    document.querySelector(".controls").style.opacity = 1;
+    document.querySelector(".controls").style.zIndex = 2000;
+    document.querySelector(".statement-pop-blanket").style.zIndex = 2001;
+    document.querySelector(".statement-pop").style.zIndex = 2002;
+    drawLegend(currentColorBy)
+    updateGridTitle(currentOrderBy)
+    drawGrid(currentData)
+  }
+};
+
+const observer = new IntersectionObserver(
+  entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const stepIndex = entry.target.dataset.step;
+        if (stepActions[stepIndex]) stepActions[stepIndex]();
+      }
+    });
+  },
+  { threshold: 0.5 }
+);
+
+steps.forEach(step => observer.observe(step));
+
+
+document.querySelector('.scroll-step').addEventListener('click', (e) => {
+  e.stopPropagation(); // Prevents triggering anything on the overlay
+  // Optionally, forward the click manually
+  const below = document.elementFromPoint(e.clientX, e.clientY);
+  if (below) below.click();
+});
 
 
