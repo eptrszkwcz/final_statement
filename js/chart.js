@@ -546,3 +546,30 @@ function GetColorFactory(currentColorBy) {
       return "#52D0C1"; // default
     };
 }
+
+export function manual_mask() {
+  const svg_size = document.getElementById("grid");
+  const mask = document.querySelector(".mask");
+  positionMask(mask, svg_size, botMargin);
+  mask.style.display = "block";
+};
+
+// position the Mask for no claim inmates
+function positionMask(popup, svg, botMargin) {
+  const rect = svg.getBoundingClientRect();
+
+  var computed_width = rect.width;
+  var computed_height = rect.height - botMargin - 105;
+
+  popup.style.position = 'absolute';
+  popup.style.left = `${rect.left + window.scrollX}px`;
+  popup.style.top = `${rect.top + window.scrollY}px`;
+  popup.style.width = `${computed_width}px`;
+  popup.style.height = `${computed_height}px`;
+}
+
+export function hide_mask() {
+  const mask = document.querySelector(".mask");
+  mask.style.display = "none";
+  console.log("Mask hidden");
+};

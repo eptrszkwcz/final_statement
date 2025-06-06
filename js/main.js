@@ -1,6 +1,6 @@
 // import { groupConfig } from "./config.js";
 import { binAge, binStmtLen, binDate } from './data.js';
-import { drawGrid, drawGrid_sequence, manual_stmt_pop, drawLegend, updateGridTitle} from './chart.js';
+import { drawGrid, drawGrid_sequence, manual_stmt_pop, manual_mask, hide_mask, drawLegend, updateGridTitle} from './chart.js';
 
 let originalData = [];
 let currentData = [];
@@ -182,6 +182,9 @@ const stepActions = {
     document.querySelector(".grid-title").style.opacity = 1;
     currentOrderBy = "stmt_len";
     currentColorBy = "innocent";
+    hide_mask();
+    // document.querySelector(".mask").style.display = "none";
+    document.querySelector(".mask").style.opacity = 0;
     drawLegend(currentColorBy)
     updateGridTitle(currentOrderBy)
     drawGrid(currentData)
@@ -195,6 +198,8 @@ const stepActions = {
     drawLegend(currentColorBy)
     updateGridTitle(currentOrderBy)
     drawGrid(currentData)
+    manual_mask()
+    document.querySelector(".mask").style.opacity = 0.9;
   },
   "explore": () => {
     document.querySelector(".legend-container").style.opacity = 1;
@@ -205,6 +210,7 @@ const stepActions = {
     document.querySelector(".controls").style.zIndex = 2000;
     document.querySelector(".statement-pop-blanket").style.zIndex = 2001;
     document.querySelector(".statement-pop").style.zIndex = 2002;
+    document.querySelector(".mask").style.display = "none";
     drawLegend(currentColorBy)
     updateGridTitle(currentOrderBy)
     drawGrid(currentData)
